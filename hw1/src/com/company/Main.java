@@ -21,7 +21,7 @@ public class Main {
         }
     }
 
-    private static ArrayList<Long> checkNominalEntering(String coinsLine, Long sum) throws IOException {
+    public static ArrayList<Long> checkcoinsEntering(String coinsLine, Long sum) throws IOException {
         String[] coinStrings = coinsLine.split(" ");
         ArrayList<Long> allNominals = new ArrayList<>();
         for (String coinsString : coinStrings) {
@@ -42,19 +42,14 @@ public class Main {
         Long sum = checkNumberEntering(sumLine);
         System.out.println("Введите купюры через пробел");
         String coinsLine = br.readLine();
-        ArrayList<Long> coins =  checkNominalEntering(coinsLine, sum);
-        //System.out.println("Сумма для размена: " + sum);
-        //System.out.println("Купюры для размена: ");
-        //System.out.println(coins);
+        ArrayList<Long> coins =  checkcoinsEntering(coinsLine, sum);
 
-        //Long a=3L;
         //coins.add(a);
         //coins.add(2L);
         //coins.add(1L);
         //coins.add(4L);
         //System.out.println(coins);
         HashMap<Long, Long> result1 = new HashMap<>();
-        //Long sum=inputSumValue(System.in);
         long g=Change.count(sum, coins, result1,0, 0) ;
         System.out.println("Всего уникальных комбинаций: "+g);
     }
