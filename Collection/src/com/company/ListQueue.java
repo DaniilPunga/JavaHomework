@@ -2,7 +2,7 @@ package com.company;
 
 import java.util.*;
 
-public class ListQueue <Item> implements Queue <Item> {
+public class ListQueue<Item> implements Queue<Item> {
     private DoublList<Item> queue = new DoublList();
 
     public ListQueue() {
@@ -16,7 +16,7 @@ public class ListQueue <Item> implements Queue <Item> {
 
     @Override
     public boolean isEmpty() {
-        boolean isEmpty=queue.isEmpty();
+        boolean isEmpty = queue.isEmpty();
         return isEmpty;
 
     }
@@ -24,11 +24,21 @@ public class ListQueue <Item> implements Queue <Item> {
 
     @Override
     public Item peek() {
-        boolean isEmpty=queue.isEmpty();
+        boolean isEmpty = queue.isEmpty();
         if (isEmpty) {
             return null;
         } else {
             return queue.get(0);
+        }
+    }
+
+    public Item pop() {
+        boolean isEmpty = queue.isEmpty();
+        if (isEmpty) {
+            return null;
+        } else {
+
+            return queue.remove(0);
         }
     }
 
@@ -110,8 +120,6 @@ public class ListQueue <Item> implements Queue <Item> {
     public Item element() {
         throw new UnsupportedOperationException("Unsupported method");
     }
-
-
 
 
 }

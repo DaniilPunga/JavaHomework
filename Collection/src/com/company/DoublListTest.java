@@ -45,6 +45,7 @@ public class DoublListTest {
         DoublList<String> list = new DoublList<>();
         list.add("g");
         Assertions.assertEquals("g", list.remove(0));
+
     }
 
     @Test
@@ -60,8 +61,8 @@ public class DoublListTest {
         DoublList<String> list = new DoublList<>();
         list.add("a");
         list.add("c");
-        list.add(0,"g");
-        list.add(2,"b");
+        list.add(0, "g");
+        list.add(2, "b");
         Assertions.assertEquals("b", list.remove(2));
     }
 
@@ -70,8 +71,8 @@ public class DoublListTest {
         DoublList<String> list = new DoublList<>();
         list.add("a");
         list.add("c");
-        list.add(0,"g");
-        list.add(2,"b");
+        list.add(0, "g");
+        list.add(2, "b");
         Assertions.assertEquals("g", list.get(0));
     }
 
@@ -87,8 +88,8 @@ public class DoublListTest {
         DoublList<String> list = new DoublList<>();
         list.add("a");
         list.add("c");
-        list.add(0,"g");
-        list.add(2,"b");
+        list.add(0, "g");
+        list.add(2, "b");
         Assertions.assertEquals(true, list.contains("g"));
     }
 
@@ -97,8 +98,8 @@ public class DoublListTest {
         DoublList<String> list = new DoublList<>();
         list.add("a");
         list.add("c");
-        list.add(0,"g");
-        list.add(2,"b");
+        list.add(0, "g");
+        list.add(2, "b");
         Assertions.assertEquals(false, list.contains("e"));
     }
 

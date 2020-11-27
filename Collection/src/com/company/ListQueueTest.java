@@ -47,6 +47,28 @@ public class ListQueueTest {
     }
 
     @Test
+    void testPopForEmptyQueue() {
+        ListQueue<String> queue = new ListQueue<>();
+        Assertions.assertEquals(null, queue.pop());
+    }
+
+    @Test
+    void testPopForNotEmptyQueue() {
+        ListQueue<String> queue = new ListQueue<>();
+        queue.add("g");
+        Assertions.assertEquals("g", queue.pop());
+    }
+
+    @Test
+    void testPopForNotEmptyQueue2() {
+        ListQueue<String> queue = new ListQueue<>();
+        queue.add("a");
+        queue.add("g");
+        queue.pop();
+        Assertions.assertEquals("g", queue.pop());
+    }
+
+    @Test
     void testPeekForNotEmptyQueue2() {
         ListQueue<String> queue = new ListQueue<>();
         queue.add("a");

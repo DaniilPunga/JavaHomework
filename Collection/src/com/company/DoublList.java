@@ -7,10 +7,10 @@ public class DoublList<Item> implements List<Item> {
     private Node<Item> head, tail;
     private int sizeL;
 
-    public DoublList(){
-        head=null;
-        tail=null;
-        sizeL=0;
+    public DoublList() {
+        head = null;
+        tail = null;
+        sizeL = 0;
     }
 
 
@@ -21,18 +21,21 @@ public class DoublList<Item> implements List<Item> {
         Node current = head;
         while (current != null) {
             if (i == index) {
-                if(current == head){
-                    if(sizeL<=1){
-                        head=null;
+                if (current == head) {
+                    if (sizeL <= 1) {
+                        head = null;
+                        sizeL--;
                         return (Item) current.data;
-                    }else{
-                        head=current.next;
-                        current.next.prev=null;
+                    } else {
+                        head = current.next;
+                        sizeL--;
+                        current.next.prev = null;
                         return (Item) current.data;
                     }
                 }
-                current.prev.next=current.next;
-                current.next.prev=current.prev;
+                sizeL--;
+                current.prev.next = current.next;
+                current.next.prev = current.prev;
                 return (Item) current.data;
             }
             current = current.next;
@@ -46,25 +49,25 @@ public class DoublList<Item> implements List<Item> {
     public void add(int index, Item data) {
         checkValue(data);
         checkIndex(index);
-        if(index > sizeL){
+        if (index > sizeL) {
             System.out.println("Индекс больше длинны масива");
-        }else if( head == null ){
+        } else if (head == null) {
             Node current = new Node<>(data);
             head = current;
             tail = current;
             ++sizeL;
-        }else if(index == sizeL){
-            Node<Item> current =  new Node(data);
+        } else if (index == sizeL) {
+            Node<Item> current = new Node(data);
             tail.next = current;
             current.prev = tail;
-            tail =  current;
+            tail = current;
             ++sizeL;
-        }else if (index == 0) {
-            Node<Item> current =  new Node(data);
+        } else if (index == 0) {
+            Node<Item> current = new Node(data);
             current.next = head;
-            head=current;
+            head = current;
             ++sizeL;
-        }else {
+        } else {
             int i = 0;
             Node current = head;
             Node added = new Node(data);
@@ -124,9 +127,9 @@ public class DoublList<Item> implements List<Item> {
 
 
     public boolean isEmpty() {
-        if (sizeL==0){
+        if (sizeL == 0) {
             return true;
-        }else {
+        } else {
             return false;
         }
 
@@ -137,21 +140,23 @@ public class DoublList<Item> implements List<Item> {
 
     }
 
-    private void checkIndex(int index){
+    private void checkIndex(int index) {
         if ((index > sizeL) || (index < 0)) {
             throw new IndexOutOfBoundsException("Index > list size or Index < 0");
         }
     }
 
-    private void checkValue(Item data){
+    private void checkValue(Item data) {
         if (data == null) {
             throw new NullPointerException("Null elements are not permitted");
         }
     }
+
     @Override
     public List<Item> subList(int fromIndex, int toIndex) {
         throw new UnsupportedOperationException("This operation is not supported");
     }
+
     @Override
     public Iterator<Item> iterator() {
         throw new UnsupportedOperationException("This operation is not supported");

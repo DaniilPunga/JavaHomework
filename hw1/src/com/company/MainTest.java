@@ -1,4 +1,5 @@
 package Test;
+
 import com.company.Change;
 import com.company.Main;
 import org.junit.jupiter.api.Assertions;
@@ -51,7 +52,7 @@ public class MainTest {
     public void testInputcoinsWithMoresum() {
         String nominalLine = "25 -1 -1 -3";
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            Main.checkcoinsEntering(nominalLine,20L);
+            Main.checkcoinsEntering(nominalLine, 20L);
         });
     }
 
@@ -59,7 +60,7 @@ public class MainTest {
     public void testInputcoinsWithNegative() {
         String nominalLine = "5 -1 -1 -3";
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            Main.checkcoinsEntering(nominalLine,20L);
+            Main.checkcoinsEntering(nominalLine, 20L);
         });
     }
 
@@ -67,10 +68,17 @@ public class MainTest {
     public void testInputcoinsWithZero() {
         String nominalLine = "3 0";
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            Main.checkcoinsEntering(nominalLine,20L);
+            Main.checkcoinsEntering(nominalLine, 20L);
         });
     }
 
-
+    @Test
+    public void testInputcoinsWithString() {
+        // проверка ввода не числа
+        String nominalLine = "5 a 8 7";
+        Assertions.assertThrows(NumberFormatException.class, () -> {
+            Main.checkcoinsEntering(nominalLine, 20L);
+        });
+    }
 
 }
