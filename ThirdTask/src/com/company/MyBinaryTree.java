@@ -19,7 +19,7 @@ public class MyBinaryTree<Key, Val> {
 
     int getHeight(TreeNode<Key, Val> root) {
         if (root != null) {
-            return root.height;
+            return root.getHeight();
         } else {
             return 0;
         }
@@ -29,7 +29,7 @@ public class MyBinaryTree<Key, Val> {
         if (root == null) {
             return 0;
         } else {
-            return getHeight(root.right) - getHeight(root.left);
+            return getHeight(root.getRight()) - getHeight(root.getLeft());
         }
     }
 
@@ -37,45 +37,45 @@ public class MyBinaryTree<Key, Val> {
         if (root == null) {
             return;
         }
-        int leftHeight = getHeight(root.left);
-        int rightHeight = getHeight(root.right);
-        root.height = Math.max(leftHeight, rightHeight) + 1;
+        int leftHeight = getHeight(root.getLeft());
+        int rightHeight = getHeight(root.getRight());
+        root.newheight(Math.max(leftHeight, rightHeight) + 1);
     }
 
     TreeNode<Key, Val> balance(TreeNode<Key, Val> root) {
         fixHeight(root);
         if (getBalanceFactor(root) == 2) {
-            if (getBalanceFactor(root.right) < 0) {
-                TreeNode<Key, Val> current = root.right;
-                TreeNode<Key, Val> leftTree = current.left;
-                current.left = leftTree.right;
-                leftTree.right = current;
+            if (getBalanceFactor(root.getRight()) < 0) {
+                TreeNode<Key, Val> current = root.getRight();
+                TreeNode<Key, Val> leftTree = current.getLeft();
+                current.newleft(leftTree.getRight());
+                leftTree.newright(current);
                 fixHeight(current);
                 fixHeight(leftTree);
-                root.right = leftTree;
+                root.newright(leftTree);
             }
             TreeNode<Key, Val> current = root;
-            TreeNode<Key, Val> rightTree = current.right;
-            current.right = rightTree.left;
-            rightTree.left = current;
+            TreeNode<Key, Val> rightTree = current.getRight();
+            current.newright(rightTree.getLeft());
+            rightTree.newleft(current);
             fixHeight(current);
             fixHeight(rightTree);
             return rightTree;
         }
         if (getBalanceFactor(root) == (-2)) {
-            if (getBalanceFactor(root.left) > 0) {
-                TreeNode<Key, Val> current = root.left;
-                TreeNode<Key, Val> rightTree = current.right;
-                current.right = rightTree.left;
-                rightTree.left = current;
+            if (getBalanceFactor(root.getLeft()) > 0) {
+                TreeNode<Key, Val> current = root.getLeft();
+                TreeNode<Key, Val> rightTree = current.getRight();
+                current.newright(rightTree.getLeft());
+                rightTree.newleft(current);
                 fixHeight(current);
                 fixHeight(rightTree);
-                root.left = rightTree;
+                root.newleft(rightTree);
             }
             TreeNode<Key, Val> current = root;
-            TreeNode<Key, Val> leftTree = current.left;
-            current.left = leftTree.right;
-            leftTree.right = current;
+            TreeNode<Key, Val> leftTree = current.getLeft();
+            current.newleft(leftTree.getRight());
+            leftTree.newright(current);
             fixHeight(current);
             fixHeight(leftTree);
             return leftTree;
@@ -91,11 +91,11 @@ public class MyBinaryTree<Key, Val> {
         } else if (root == null) {
             root = newNode;
         } else if (root.compareTo(key) < 0) {
-            root.left = addRecursive(key, value, root.left);
+            root.newleft(addRecursive(key, value, root.getLeft()));
         } else if (root.compareTo(key) > 0) {
-            root.right = addRecursive(key, value, root.right);
+            root.newright(addRecursive(key, value, root.getRight()));
         } else if (root.compareTo(key) == 0) {
-            root.value = value;
+            root.newvalue(value);
             return root;
         }
         return balance(root);
@@ -111,9 +111,9 @@ public class MyBinaryTree<Key, Val> {
         TreeNode<Key, Val> current = this.root;
         while (current != null) {
             if (current.compareTo(key) < 0) {
-                current = current.left;
+                current = current.getLeft();
             } else if (current.compareTo(key) > 0) {
-                current = current.right;
+                current = current.getRight();
             } else {
                 return true;
             }
@@ -129,11 +129,11 @@ public class MyBinaryTree<Key, Val> {
         TreeNode<Key, Val> current = this.root;
         while (current != null) {
             if (current.compareTo(key) < 0) {
-                current = current.left;
+                current = current.getLeft();
             } else if (current.compareTo(key) > 0) {
-                current = current.right;
+                current = current.getRight();
             } else {
-                return current.value;
+                return current.getVal();
             }
         }
         return null;
@@ -142,10 +142,10 @@ public class MyBinaryTree<Key, Val> {
 
 
     private TreeNode<Key, Val> removeSmallestValue(TreeNode<Key, Val> root) {
-        if (root.left == null) {
-            return root.right;
+        if (root.getLeft() == null) {
+            return root.getRight();
         } else {
-            root.left = removeSmallestValue(root.left);
+            root.newleft(removeSmallestValue(root.getLeft()));
             return balance(root);
         }
     }
@@ -162,22 +162,22 @@ public class MyBinaryTree<Key, Val> {
         }
 
         if (current.compareTo(key) > 0) {
-            current.right = removeRecursive(key, current.right);
+            current.newright(removeRecursive(key, current.getRight()));
         } else if (current.compareTo(key) < 0) {
-            current.left = removeRecursive(key, current.left);
+            current.newleft(removeRecursive(key, current.getLeft()));
         } else {
-            TreeNode<Key, Val> leftTree = current.left;
-            TreeNode<Key, Val> rightTree = current.right;
+            TreeNode<Key, Val> leftTree = current.getLeft();
+            TreeNode<Key, Val> rightTree = current.getRight();
             if (rightTree == null) {
                 return balance(leftTree);
             }
             TreeNode<Key, Val> currentSmallest = rightTree;
-            while (currentSmallest.left != null) {
-                currentSmallest = currentSmallest.left;
+            while (currentSmallest.getLeft() != null) {
+                currentSmallest = currentSmallest.getLeft();
             }
             TreeNode<Key, Val> min = currentSmallest;
-            min.right = removeSmallestValue(rightTree);
-            min.left = leftTree;
+            min.newright(removeSmallestValue(rightTree));
+            min.newleft(leftTree);
 
             return balance(min);
         }

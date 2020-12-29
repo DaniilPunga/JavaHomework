@@ -3,11 +3,11 @@ package com.company;
 import java.util.Comparator;
 
 public class TreeNode<Key, Val> {
-    Key key;
-    Val value;
-    TreeNode<Key, Val> left;
-    TreeNode<Key, Val> right;
-    int height;
+    private Key key;
+    private Val value;
+    private TreeNode<Key, Val> left;
+    private TreeNode<Key, Val> right;
+    private int height;
 
     TreeNode(Key key, Val data) {
         this.value = data;
@@ -15,6 +15,22 @@ public class TreeNode<Key, Val> {
         this.right = null;
         this.left = null;
         this.height = 1;
+    }
+
+    public void newvalue(Val newval) {
+        this.value = newval;
+    }
+
+    public void newheight(int newheight) {
+        this.height = newheight;
+    }
+
+    public void newleft(TreeNode<Key, Val> newleft) {
+        this.left = newleft;
+    }
+
+    public void newright(TreeNode<Key, Val> newright) {
+        this.right = newright;
     }
 
     public int getHeight() {
