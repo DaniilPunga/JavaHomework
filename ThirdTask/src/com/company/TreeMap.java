@@ -33,7 +33,7 @@ public class TreeMap<K extends Comparable<K>, V> implements Map<K, V> {
 
     @Override
     public boolean containsValue(Object value) {
-        return false;
+        throw new UnsupportedOperationException("This method is not implemented yet.");
     }
 
     @Override
@@ -63,26 +63,26 @@ public class TreeMap<K extends Comparable<K>, V> implements Map<K, V> {
 
     @Override
     public void putAll(Map m) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("This method is not implemented yet.");
     }
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("This method is not implemented yet.");
     }
 
     @Override
     public Set keySet() {
-        return null;
+        throw new UnsupportedOperationException("This method is not implemented yet.");
     }
 
     @Override
     public Collection values() {
-        return null;
+        throw new UnsupportedOperationException("This method is not implemented yet.");
     }
 
     @Override
     public Set<Entry<K, V>> entrySet() {
-        return null;
+        throw new UnsupportedOperationException("This method is not implemented yet.");
     }
 }

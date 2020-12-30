@@ -20,18 +20,18 @@ public class Filer {
         } else if (!(new File(out).getCanonicalFile().exists())) {
             throw new FileNotFoundException("File is not exist! Please enter other file or directory");
         }
-        WriteFilesInDirectory(dir, out);
+        writeFilesInDirectory(dir, out);
 
     }
 
 
-    private void WriteFilesInDirectory(File dir, String output) {
+    private void writeFilesInDirectory(File dir, String output) {
         try (FileOutputStream out = new FileOutputStream(output, true)) {
             for (File file : dir.listFiles()) {
 
                 if (file.isDirectory()) {
                     out.write((file.getCanonicalFile() + "\n").getBytes());
-                    WriteFilesInDirectory(file.getCanonicalFile(), output);
+                    writeFilesInDirectory(file.getCanonicalFile(), output);
                 } else if (file.isFile()) {
                     out.write((file.getCanonicalFile() + "\n").getBytes());
                 }
