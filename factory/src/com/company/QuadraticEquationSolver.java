@@ -13,12 +13,12 @@ public class QuadraticEquationSolver implements Runnable {
     ResourcePool<FileWriter> filePool;
     ResourcePool<Thread> threadPool;
 
-    public QuadraticEquationSolver(double[] a, double[] b, double[] c, int s, int e, ResourcePool<FileWriter> filePool, ResourcePool<Thread> threadPool) {
+    public QuadraticEquationSolver(double[] a, double[] b, double[] c, int  i, int number_of_eq,int filePoolSize, ResourcePool<FileWriter> filePool, ResourcePool<Thread> threadPool) {
         coefficientA = a;
         coefficientB = b;
         coefficientC = c;
-        start = s;
-        end = e;
+        start = (i * number_of_eq) / filePoolSize;
+        end = ((i + 1) * number_of_eq) / filePoolSize;
         this.filePool = filePool;
         this.threadPool = threadPool;
     }
@@ -49,7 +49,7 @@ public class QuadraticEquationSolver implements Runnable {
         }
         if (a == 0) {
             double x;
-            if (b != 0) {
+            if (discriminant != 0) {
                 x = -(c / b);
                 return String.format("Один корень: %f\n", x);
             } else {

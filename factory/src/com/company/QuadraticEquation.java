@@ -12,7 +12,7 @@ public class QuadraticEquation {
             threadPoolSize = Integer.parseInt(args[1]);
         }
         int waitingTimeInMillis = 1000;
-        int start, end;
+
         int number_of_eq = 10000;
         int coefficient_range = 20000;
         double[] firstCoefficient = new double[number_of_eq];
@@ -28,9 +28,7 @@ public class QuadraticEquation {
         ResourcePool<FileWriter> filePool = new ResourcePool<>(filePoolSize, waitingTimeInMillis, new FileFactory());
 
         for (int i = 0; i < filePoolSize; i++) {
-            start = (i * number_of_eq) / filePoolSize;
-            end = ((i + 1) * number_of_eq) / filePoolSize;
-            QuadraticEquationSolver solverThread = new QuadraticEquationSolver(firstCoefficient, secondCoefficient, thirdCoefficient, start, end, filePool, threadPool);
+            QuadraticEquationSolver solverThread = new QuadraticEquationSolver(firstCoefficient, secondCoefficient, thirdCoefficient, i, number_of_eq, filePoolSize, filePool, threadPool);
             solverThread.startSolve();
         }
         threadPool.shutdown();
