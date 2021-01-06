@@ -25,25 +25,20 @@ public class QuadraticEquationSolver implements Runnable {
 
     @Override
     public void run() {
-        try (FileWriter logWriter = filePool.acquire()) {
+        try (FileWriter logWriter = filePool.takeObject()) {
             for (int i = start; i < end; i++) {
-                String roots = calculateRoots(coefficientA[i], coefficientB[i], coefficientC[i]);
-                logWriter.write(roots);
+                logWriter.write(calculateRoots(coefficientA[i], coefficientB[i], coefficientC[i]));
             }
-            filePool.returnBack(logWriter);
+            filePool.dropRes(logWriter);
         } catch (IOException e) {
             System.out.println(e);
         }
     }
 
-    public void execute(Runnable runnable) {
-        Thread worker = threadPool.acquire();
-        try {
-            runnable.run();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        threadPool.returnBack(worker);
+    public void startSolve() {
+        Thread worker = threadPool.takeObject();
+        this.run();
+        threadPool.dropRes(worker);
     }
 
 

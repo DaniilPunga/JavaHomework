@@ -9,20 +9,17 @@ public class PoolElement<Long, V> {
         this.value = value;
     }
 
-    public V getValue() {
+    public V takeValue() {
         return this.value;
     }
 
-    public long getTime() {
-        return time;
+    public long takeTime() {
+        return this.time;
     }
 
     public boolean isAlive(long waitingTime) {
         long curTime = System.currentTimeMillis();
-        if (curTime - this.time > waitingTime) {
-            return false;
-        } else {
-            return true;
-        }
+        long time_of_work = curTime - this.time;
+        return !(time_of_work > waitingTime);
     }
 }

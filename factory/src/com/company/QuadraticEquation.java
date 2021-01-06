@@ -15,13 +15,13 @@ public class QuadraticEquation {
         int start, end;
         int number_of_eq = 10000;
         int coefficient_range = 20000;
-        double[] coefficientA = new double[number_of_eq];
-        double[] coefficientB = new double[number_of_eq];
-        double[] coefficientC = new double[number_of_eq];
+        double[] firstCoefficient = new double[number_of_eq];
+        double[] secondCoefficient = new double[number_of_eq];
+        double[] thirdCoefficient = new double[number_of_eq];
         for (int i = 0; i < number_of_eq; i++) {
-            coefficientA[i] = (Math.random() * (coefficient_range + 1)) - (coefficient_range / 2);
-            coefficientB[i] = (Math.random() * (coefficient_range + 1)) - (coefficient_range / 2);
-            coefficientC[i] = (Math.random() * (coefficient_range + 1)) - (coefficient_range / 2);
+            firstCoefficient[i] = (Math.random() * (coefficient_range + 1)) - (coefficient_range / 2);
+            secondCoefficient[i] = (Math.random() * (coefficient_range + 1)) - (coefficient_range / 2);
+            thirdCoefficient[i] = (Math.random() * (coefficient_range + 1)) - (coefficient_range / 2);
         }
 
         ResourcePool<Thread> threadPool = new ResourcePool<>(threadPoolSize, waitingTimeInMillis, new ThreadFactory());
@@ -30,8 +30,8 @@ public class QuadraticEquation {
         for (int i = 0; i < filePoolSize; i++) {
             start = (i * number_of_eq) / filePoolSize;
             end = ((i + 1) * number_of_eq) / filePoolSize;
-            QuadraticEquationSolver solverThread = new QuadraticEquationSolver(coefficientA, coefficientB, coefficientC, start, end, filePool, threadPool);
-            solverThread.execute(solverThread);
+            QuadraticEquationSolver solverThread = new QuadraticEquationSolver(firstCoefficient, secondCoefficient, thirdCoefficient, start, end, filePool, threadPool);
+            solverThread.startSolve();
         }
         threadPool.shutdown();
     }

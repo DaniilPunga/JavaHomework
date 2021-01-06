@@ -19,20 +19,20 @@ class ResourcePoolTest {
     }
 
     @Test
-    void throwsExceptionAcquirePoolIsTerminated() {
+    void throwsExceptionTakeObjectPoolIsTerminated() {
         int size = 7;
         ResourcePool<Thread> threadPool = new ResourcePool<>(size, 2000, new ThreadFactory());
         threadPool.shutdown();
-        Assertions.assertThrows(IllegalStateException.class, () -> threadPool.acquire());
+        Assertions.assertThrows(IllegalStateException.class, () -> threadPool.takeObject());
     }
 
     @Test
-    void throwsExceptionReturnBackPoolIsTerminated() {
+    void throwsExceptionDropResPoolIsTerminated() {
         int size = 5;
         ResourcePool<Thread> threadPool = new ResourcePool<>(size, 2000, new ThreadFactory());
-        Thread worker = threadPool.acquire();
+        Thread worker = threadPool.takeObject();
         threadPool.shutdown();
-        Assertions.assertThrows(IllegalStateException.class, () -> threadPool.returnBack(worker));
+        Assertions.assertThrows(IllegalStateException.class, () -> threadPool.dropRes(worker));
     }
 
 

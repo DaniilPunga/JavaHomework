@@ -17,7 +17,7 @@ class QuadraticEquationTest {
     void testMainLogSize() {
         String[] poolSizes = {"4", "8"};
         QuadraticEquation.main(poolSizes);
-        String fileLogPath = System.getProperty("user.dir") + File.separator + "Log";
+        String fileLogPath = System.getProperty("user.home") + File.separator + "Documents";
         File dir = new File(fileLogPath);
         File[] arrFiles = dir.listFiles();
         List<File> lstFiles = Arrays.asList(arrFiles);
@@ -26,9 +26,9 @@ class QuadraticEquationTest {
 
     @Test
     void testMainLogFilesSize() {
-        String[] poolSizes = {"1", "8"};
+        String[] poolSizes = {"4", "8"};
         QuadraticEquation.main(poolSizes);
-        String fileLogPath = System.getProperty("user.dir") + File.separator + "Log";
+        String fileLogPath = System.getProperty("user.home") + File.separator + "Documents";
         File dir = new File(fileLogPath);
         File[] arrFiles = dir.listFiles();
         List<File> lstFiles = Arrays.asList(arrFiles);
@@ -39,7 +39,7 @@ class QuadraticEquationTest {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Assertions.assertEquals(10000, lines.count());
+            Assertions.assertEquals(2500, lines.count());
         }
     }
 

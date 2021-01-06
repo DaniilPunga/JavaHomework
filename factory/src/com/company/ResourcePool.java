@@ -7,107 +7,98 @@ public class ResourcePool<V> {
     private BlockingQueue<PoolElement<Long, V>> pool;
     private LinkedBlockingQueue<V> executableObjects = new LinkedBlockingQueue<V>();
     private ExecutorService executor = Executors.newCachedThreadPool();
-    private ObjectFactory<V> objectFactory;
+    private ObjectFactory<V> resourceFactory;
 
     private int size;
     private int waitingTime;
-    private boolean poolIsTerminated;
+    private boolean poolShaddowned;
 
     public ResourcePool(int size, int waitingTime, ObjectFactory<V> objectFactory) {
         this.size = size;
-        this.objectFactory = objectFactory;
+        this.resourceFactory = objectFactory;
         this.waitingTime = waitingTime;
         pool = new LinkedBlockingQueue<>(size);
-        createPool();
-        poolIsTerminated = false;
+        for (int i = 0; i < size; ++i) {
+            V newObject = objectFactory.createObject();
+            PoolElement<Long, V> newObj = new PoolElement<>(CurrentTime(), newObject);
+            pool.add(newObj);
+        }
+        poolShaddowned = false;
     }
 
     public ResourcePool(int waitingTime, ObjectFactory<V> objectFactory) {
-        this(Runtime.getRuntime().availableProcessors(), waitingTime, objectFactory);
-    }
-
-    public void createPool() {
-        long curTime;
+        this.size = Runtime.getRuntime().availableProcessors();
+        this.resourceFactory = objectFactory;
+        this.waitingTime = waitingTime;
+        pool = new LinkedBlockingQueue<>(size);
         for (int i = 0; i < size; ++i) {
-            curTime = System.currentTimeMillis();
-            PoolElement<Long, V> newObj = new PoolElement<>(curTime, createObject());
+            V newObject = objectFactory.createObject();
+            PoolElement<Long, V> newObj = new PoolElement<>(CurrentTime(), newObject);
             pool.add(newObj);
         }
+        poolShaddowned = false;
     }
 
     public int getPoolSize() {
         return this.pool.size();
     }
 
-    public V createObject() {
-        V newObject = objectFactory.createObject();
-        return newObject;
-    }
-
-    public V acquire() {
-        if (poolIsTerminated) {
-            throw new IllegalStateException("Pool is terminated!");
-        }
-        long curTime;
-        V value;
-        if (pool.size() == 0) {
-            curTime = System.currentTimeMillis();
-            PoolElement<Long, V> newResource = tryCreateNewResource(curTime);
-            if (newResource == null) {
-                return null;
-            }
-        }
-        try {
-            PoolElement<Long, V> requestedResource = pool.take();
-            if (requestedResource.isAlive(waitingTime)) {
-                value = requestedResource.getValue();
-                executableObjects.add(value);
-                return value;
-            } else {
-                pool.remove(requestedResource);
-                curTime = System.currentTimeMillis();
-                PoolElement<Long, V> newResource = tryCreateNewResource(curTime);
-                if (newResource != null) {
-                    value = newResource.getValue();
-                    executableObjects.add(value);
-                    return value;
+    public V takeObject() {
+        if (!poolShaddowned) {
+            long curTime;
+            V value;
+            try {
+                PoolElement<Long, V> requestedResource = pool.take();
+                if (!requestedResource.isAlive(waitingTime)) {
+                    pool.remove(requestedResource);
+                    PoolElement<Long, V> newResource = createNewResource();
+                    value = newResource.takeValue();
+                    if (newResource == null) {
+                        return null;
+                    }
+                } else {
+                    value = requestedResource.takeValue();
                 }
+                executableObjects.put(value);
+                return value;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            return null;
         }
-        return null;
+        throw new IllegalStateException("Pool is Shaddowned!");
     }
 
-    public PoolElement<Long, V> tryCreateNewResource(long curTime) {
-        PoolElement<Long, V> newResource = new PoolElement<>(curTime, createObject());
-        if (pool.add(newResource)) {
-            if (newResource.isAlive(waitingTime)) {
-                return newResource;
-            } else {
-                System.out.println("Error creating a new pool item. Null will be returned");
-                return null;
-            }
+    public PoolElement<Long, V> createNewResource() {
+        long curTime = CurrentTime();
+        V newObject = resourceFactory.createObject();
+        PoolElement<Long, V> newResource = new PoolElement<>(curTime, newObject);
+        if (pool.add(newResource) && newResource.isAlive(waitingTime)) {
+            return newResource;
         } else {
             System.out.println("Error creating a new pool item. Null will be returned");
             return null;
         }
     }
 
-    public void returnBack(V value) {
-        if (poolIsTerminated) {
+    private long CurrentTime() {
+        return System.currentTimeMillis();
+    }
+
+    public void dropRes(V value) {
+        if (poolShaddowned) {
             throw new IllegalStateException("Pool is terminated!");
-        }
-        if (value != null) {
+        } else if (value == null) {
+            throw new IllegalArgumentException("Resource is null");
+        } else {
             executableObjects.remove(value);
-            long curTime = System.currentTimeMillis();
-            PoolElement<Long, V> retResource = new PoolElement<>(curTime, value);
+            PoolElement<Long, V> retResource = new PoolElement<>(CurrentTime(), value);
             pool.offer(retResource);
         }
     }
 
     public void shutdown() {
-        poolIsTerminated = true;
+        poolShaddowned = true;
         executor.shutdownNow();
     }
 }
